@@ -1,30 +1,28 @@
 import Image from 'next/image'
 import { fetchPokemonProfile } from '@/action/get-pokemon'
 import { EvolutionChain, Pokemon, PokemonSpecies } from '@/types/pokemon-types'
-import { memo, useEffect, useState } from 'react'
+import { memo } from 'react'
 import Evolutions from './pokemon-details/Evolutions'
 import { AnimatePresence, motion } from 'motion/react'
 import PokemonStats from './pokemon-details/PokemonStats'
 import Type from './pokemon-details/Type'
 import { ClipLoader } from 'react-spinners'
+import { useQuery } from '@tanstack/react-query'
+import PokeballLoader from './PokeballLoader'
 
 export default memo(function PokemonDetails({ url }: { url: string | null }) {
-  const [data, setData] = useState<{
+  const { data, isLoading: loading } = useQuery<{
     pokemon: Pokemon
     pokemonSpecies: PokemonSpecies
     evolutionChain: EvolutionChain
-  } | null>(null)
-  const [loading, setLoading] = useState(false)
-  useEffect(() => {
-    const fetch = async () => {
-      if (url === null) return
-      setLoading(true)
-      const data = await fetchPokemonProfile(url)
-      setData(data)
-      setLoading(false)
-    }
-    fetch()
-  }, [url])
+  } | null>({
+    queryKey: ['pokemonProfile', url],
+    queryFn: () => {
+      if (url === null) return null
+      return fetchPokemonProfile(url)
+    },
+  })
+
   return (
     <AnimatePresence
       initial={false}
@@ -32,7 +30,7 @@ export default memo(function PokemonDetails({ url }: { url: string | null }) {
     >
       {loading ? (
         <div className='w-full h-full flex items-center justify-center'>
-          <ClipLoader />
+          <PokeballLoader />
         </div>
       ) : (
         <motion.div
@@ -50,7 +48,7 @@ export default memo(function PokemonDetails({ url }: { url: string | null }) {
           }}
           className='absolute rounded-4xl bg-white w-full left-1/2 -translate-x-1/2 z-99 h-full flex justify-center overflow-scroll pb-4'
         >
-          {data !== null ? (
+          {data ? (
             <>
               <div className='flex flex-col items-center py-4 w-full px-4 gap-1'>
                 <div className='flex w-full justify-evenly'>
@@ -106,7 +104,7 @@ export default memo(function PokemonDetails({ url }: { url: string | null }) {
                   <div className='flex w-full gap-2'>
                     {data.pokemon.abilities.map((ability) => (
                       <span
-                        className='w-full bg-slate-300 text-slate-700 rounded-full py-1 font-mono uppercase text-lg font-bold'
+                        className='w-full bg-slate-300 text-slate-700 rounded-full py-1 font-mono uppercase text-lg font-bold flex items-center justify-center'
                         key={ability.ability.name}
                       >
                         {ability.ability.name}

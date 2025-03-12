@@ -8,6 +8,9 @@ import { useInView } from 'motion/react'
 import Search from './Search'
 import { useDebounce } from 'use-debounce'
 import PokemonDetailsMobile from './PokemmonDetailsMobile'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+
+const queryClient = new QueryClient()
 
 export default function PokemonPage({
   initial,
@@ -58,7 +61,7 @@ export default function PokemonPage({
   }
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <div className='container px-4 mx-auto gap-3 flex flex-col'>
         <Search
           query={search}
@@ -100,6 +103,6 @@ export default function PokemonPage({
         setHidden={setHidden}
         url={activePokemon}
       />
-    </>
+    </QueryClientProvider>
   )
 }

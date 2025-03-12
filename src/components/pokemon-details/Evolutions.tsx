@@ -38,20 +38,23 @@ export default function Evolutions({
   return (
     <div className='flex flex-col items-center justify-center gap-3 mt-6 w-full'>
       <h2 className='font-bold font-noto text-2xl text-slate-600'>Evolution</h2>
-      <div className='flex gap-1 text-center'>
+      <div className='flex text-center gap-2'>
         {array.map((evolution) => (
           <Fragment key={evolution.name}>
             {evolution.detail && evolution.detail.length > 0 && (
-              <span
-                className='font-mono font-bold self-center bg-slate-400 rounded-full w-full justify-center flex'
+              <div
+                className='font-mono py-1 flex-col font-bold self-center bg-slate-400 rounded-full w-full justify-center flex'
                 key={`evolution-requirement${evolution.name}`}
-              >{`lvl ${evolution.detail![0].min_level || '?'}`}</span>
+              >
+                <span>{'lvl'}</span>
+                <span>{`${evolution.detail![0].min_level || '?'}`}</span>
+              </div>
             )}
             <div
               className='flex flex-col items-center justify-center'
               key={evolution.name}
             >
-              <div className='flex gap-3 items-center w-full bg-slate-200 rounded-2xl'>
+              <div className='flex gap-3 items-center w-full rounded-2xl'>
                 <Image
                   src={evolution.sprite!}
                   alt={evolution.name}

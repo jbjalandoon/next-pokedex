@@ -1,13 +1,15 @@
 import { AnimatePresence, motion } from 'motion/react'
 import Image from 'next/image'
 import Type from '../pokemon-details/Type'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import { EvolutionChain, Pokemon, PokemonSpecies } from '@/types/pokemon-types'
 import { fetchPokemonProfile } from '@/action/get-pokemon'
 import { ClipLoader } from 'react-spinners'
 import PokemonStats from '../pokemon-details/PokemonStats'
 import Evolutions from '../pokemon-details/Evolutions'
 import { IoMdClose } from 'react-icons/io'
+import { useQuery } from '@tanstack/react-query'
+import PokeballLoader from '../PokeballLoader'
 
 export default function PokemonDetailsMobile({
   url,
@@ -18,25 +20,24 @@ export default function PokemonDetailsMobile({
   hidden: boolean
   setHidden: Dispatch<SetStateAction<boolean>>
 }) {
-  const [loading, setLoading] = useState(true)
-  const [data, setData] = useState<{
+  const { data, isLoading: loading } = useQuery<{
     pokemon: Pokemon
     pokemonSpecies: PokemonSpecies
     evolutionChain: EvolutionChain
-  } | null>(null)
-  useEffect(() => {
-    const fetch = async () => {
-      if (url === null) return
+  } | null>({
+    queryKey: ['pokemonProfile', url],
+    queryFn: () => {
+      if (url === null) return null
+      return fetchPokemonProfile(url)
+    },
+  })
 
-      setLoading(true)
-      const data = await fetchPokemonProfile(url)
-      setData(data)
-      setLoading(false)
-    }
-    fetch()
-  }, [url])
-
-  if (loading) return null
+  if (loading)
+    return (
+      <div className='fixed left-0 top-0 lg:hidden flex items-center h-full w-full justify-center z-999'>
+        <PokeballLoader />
+      </div>
+    )
 
   return (
     <AnimatePresence>
@@ -65,7 +66,7 @@ export default function PokemonDetailsMobile({
             <IoMdClose />
           </button>
           <div className='rounded-t-4xl relative bg-slate-200 w-full mt-auto h-[90%] bottom-0 flex flex-col items-center gap-3'>
-            {data !== null ? (
+            {data ? (
               <>
                 <Image
                   src={data.pokemon.sprites.front_default}
