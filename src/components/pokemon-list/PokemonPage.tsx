@@ -7,8 +7,8 @@ import { ClipLoader } from 'react-spinners'
 import { useInView } from 'motion/react'
 import Search from './Search'
 import { useDebounce } from 'use-debounce'
-import PokemonDetailsMobile from './PokemmonDetailsMobile'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import PokemonDetailsMobile from './PokemonDetailsMobile'
 
 const queryClient = new QueryClient()
 

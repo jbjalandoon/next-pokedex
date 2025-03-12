@@ -6,7 +6,6 @@ import Evolutions from './pokemon-details/Evolutions'
 import { AnimatePresence, motion } from 'motion/react'
 import PokemonStats from './pokemon-details/PokemonStats'
 import Type from './pokemon-details/Type'
-import { ClipLoader } from 'react-spinners'
 import { useQuery } from '@tanstack/react-query'
 import PokeballLoader from './PokeballLoader'
 
