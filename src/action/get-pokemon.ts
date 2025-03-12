@@ -1,5 +1,3 @@
-'use server'
-
 import {
   EvolutionChain,
   NamedAPIResource,
@@ -20,7 +18,7 @@ export async function getPokemons({
     (page - 1) * limit
   }`
   try {
-    const response = await fetch(url)
+    const response = await fetch(url, { cache: 'force-cache' })
     const data = (await response.json()) as { results: Array<NamedAPIResource> }
 
     if (query) {
@@ -46,9 +44,7 @@ export async function getPokemons({
 
 export async function getPokemonSpecies({ url }: { url: string }) {
   try {
-    const response = await fetch(url, {
-      cache: 'force-cache',
-    })
+    const response = await fetch(url)
     const data = await response.json()
     return data
   } catch (error) {
@@ -59,7 +55,7 @@ export async function getPokemonSpecies({ url }: { url: string }) {
 
 export async function getPokemonEvolutions({ url }: { url: string }) {
   try {
-    const response = await fetch(url, { cache: 'force-cache' })
+    const response = await fetch(url)
     const data = await response.json()
     return data
   } catch (error) {
@@ -70,9 +66,7 @@ export async function getPokemonEvolutions({ url }: { url: string }) {
 
 export async function getPokemonDetails(url: string) {
   try {
-    const response = await fetch(url, {
-      cache: 'force-cache',
-    })
+    const response = await fetch(url)
     const data = await response.json()
     return data
   } catch (error) {
